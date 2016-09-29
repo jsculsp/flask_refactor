@@ -13,7 +13,7 @@ bootstrap = Bootstrap()
 moment = Moment()
 
 
-def create_app(config_name):
+def create_app(config_name='default'):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -27,3 +27,4 @@ def create_app(config_name):
     app.register_blueprint(routes_user)
 
     return app
+
