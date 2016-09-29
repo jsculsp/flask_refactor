@@ -10,3 +10,4 @@ from flask import session
 from flask import url_for
 from flask import abort
 from flask import current_app
+from flask import flash
