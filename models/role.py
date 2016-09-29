@@ -1,6 +1,5 @@
 from . import ModelMixin
 from . import db
-from . import created_time
 
 
 class Role(db.Model, ModelMixin):

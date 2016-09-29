@@ -1,6 +1,5 @@
 from . import ModelMixin
 from . import db
-from . import created_time
 
 from werkzeug.security import generate_password_hash, check_password_hash
 

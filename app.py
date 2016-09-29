@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 
 from config import config
-from email.email import mail
+from mail.email import mail
 from models import db
 
 from models.role import Role
@@ -23,10 +23,7 @@ def create_app(config_name):
     moment.init_app(app)
     db.init_app(app)
 
-    from routes. import main as main_blueprint
-    app.register_blueprint(main_blueprint)
-
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    from routes.user import main as routes_user
+    app.register_blueprint(routes_user)
 
     return app

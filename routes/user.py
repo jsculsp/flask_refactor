@@ -1,9 +1,17 @@
 from . import *
-from .. import db
-from ..models import User
-from ..email import send_email
-from . import main
-from .forms import NameForm
+from models.user import User
+from mail.email import send_email
+from flask_wtf import Form
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required
+
+
+main = Blueprint('user', __name__)
+
+
+class NameForm(Form):
+    name = StringField('What is your name?', validators=[Required()])
+    submit = SubmitField('Submit')
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -13,7 +21,7 @@ def index():
         user = User.query.filter_by(username=form.name.data).first()
         if user is None:
             user = User(username=form.name.data)
-            db.session.add(user)
+            user.save()
             session['known'] = False
             if current_app.config['FLASKY_ADMIN']:
                 send_email(current_app.config['FLASKY_ADMIN'], 'New User',
