@@ -1,0 +1,13 @@
+from . import ModelMixin
+from . import db
+from . import created_time
+
+
+class Role(db.Model, ModelMixin):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
