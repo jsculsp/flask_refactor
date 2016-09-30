@@ -1,9 +1,9 @@
 import time
 import unittest
 
-from models import db
+from app.models import db
 
-from app import create_app
+from app.app import create_app
 from app.models.user import User
 
 
