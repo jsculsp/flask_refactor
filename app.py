@@ -29,10 +29,10 @@ def create_app(config_name='default'):
     db.init_app(app)
     login_manager.init_app(app)
 
-    from routes.user import main as routes_user
+    from routes.user.user import main as routes_user
     app.register_blueprint(routes_user)
 
-    from routes.auth import main as routes_auth
+    from routes.auth.auth import main as routes_auth
     app.register_blueprint(routes_auth, url_prefix='/auth')
 
     return app

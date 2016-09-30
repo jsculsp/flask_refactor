@@ -1,20 +1,9 @@
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Length, Email
 from flask_login import login_user, logout_user, login_required
-
 from models.user import User
-
-from . import *
+from .forms import LoginForm, RegistrationForm
+from routes import *
 
 main = Blueprint('auth', __name__)
-
-class LoginForm(Form):
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
-                                             Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Keep me logged in')
-    submit = SubmitField('Log In')
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -35,3 +24,16 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('user.index'))
+
+
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
+        user.save()
+        flash('You can now login.')
+        return redirect(url_for('.login'))
+    return render_template('auth/register.html', form=form)
