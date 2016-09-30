@@ -14,7 +14,6 @@ class User(db.Model, ModelMixin, UserMixin):
     email = db.Column(db.Integer, unique=True, index=True)
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     @property
     def password(self):
