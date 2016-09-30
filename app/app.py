@@ -2,10 +2,10 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_moment import Moment
+
+from app.config import config
 from .mail.email import mail
 from .models import db
-
-from config import config
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
