@@ -1,7 +1,8 @@
 from flask_login import login_user, logout_user, login_required
-from models.user import User
+from app.models.user import User
+
+from app.routes import *
 from .forms import LoginForm, RegistrationForm
-from routes import *
 
 main = Blueprint('auth', __name__)
 

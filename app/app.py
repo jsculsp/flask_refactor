@@ -1,11 +1,11 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
-from flask_moment import Moment
 from flask_login import LoginManager
+from flask_moment import Moment
+from .mail.email import mail
+from .models import db
 
 from config import config
-from mail.email import mail
-from models import db
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -13,9 +13,6 @@ login_manager.login_view = 'auth.login'
 
 bootstrap = Bootstrap()
 moment = Moment()
-
-from models.role import Role
-from models.user import User
 
 
 def create_app(config_name='default'):
@@ -29,10 +26,10 @@ def create_app(config_name='default'):
     db.init_app(app)
     login_manager.init_app(app)
 
-    from routes.user.user import main as routes_user
+    from .routes.user.user import main as routes_user
     app.register_blueprint(routes_user)
 
-    from routes.auth.auth import main as routes_auth
+    from .routes.auth.auth import main as routes_auth
     app.register_blueprint(routes_auth, url_prefix='/auth')
 
     return app

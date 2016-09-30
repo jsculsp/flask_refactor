@@ -1,10 +1,12 @@
 import os
-from app import create_app
-from models import db
-from models.user import User
-from models.role import Role
-from flask_script import Manager, Shell
+
 from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager, Shell
+from app.models import db
+from app.models.user import User
+
+from app.app import create_app
+from app.models.role import Role
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)

@@ -1,6 +1,7 @@
-from routes import *
-from models.user import User
-from mail.email import send_email
+from app.mail.email import send_email
+from app.models.user import User
+
+from app.routes import *
 from .forms import NameForm
 
 main = Blueprint('user', __name__)
