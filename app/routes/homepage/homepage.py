@@ -4,7 +4,7 @@ from app.models.user import User
 from app.routes import *
 from .forms import NameForm
 
-main = Blueprint('user', __name__)
+main = Blueprint('homepage', __name__)
 
 
 @main.route('/', methods=['GET', 'POST'])

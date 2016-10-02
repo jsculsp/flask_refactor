@@ -26,7 +26,7 @@ def create_app(config_name='default'):
     db.init_app(app)
     login_manager.init_app(app)
 
-    from .routes.user.user import main as routes_user
+    from .routes.homepage.homepage import main as routes_user
     app.register_blueprint(routes_user)
 
     from .routes.auth.auth import main as routes_auth

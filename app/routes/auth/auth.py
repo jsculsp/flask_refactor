@@ -14,7 +14,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            return redirect(request.args.get('next') or url_for('user.index'))
+            return redirect(request.args.get('next') or url_for('homepage.index'))
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
@@ -24,7 +24,7 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('user.index'))
+    return redirect(url_for('homepage.index'))
 
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -47,12 +47,12 @@ def register():
 @login_required
 def confirm(token):
     if current_user.confirmed:
-        redirect(url_for('user.index'))
+        redirect(url_for('homepage.index'))
     if current_user.confirm(token):
         flash('You have confirmed your account. Thanks!')
     else:
         flash('The confirmation link is invalid or has expired.')
-    return redirect(url_for('user.index'))
+    return redirect(url_for('homepage.index'))
 
 
 @main.before_app_request
@@ -67,7 +67,7 @@ def before_request():
 @main.route('/unconfirmed')
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('user.index'))
+        return redirect(url_for('homepage.index'))
     return render_template('auth/unconfirmed.html')
 
 
@@ -79,7 +79,7 @@ def resend_confirmation():
     send_email(current_user.email, 'Confirm Your Account',
                'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email.')
-    return redirect(url_for('user.index'))
+    return redirect(url_for('homepage.index'))
 
 
 @main.route('/change-password', methods=['GET', 'POST'])
@@ -91,7 +91,7 @@ def change_password():
             current_user.password = form.password.data
             current_user.save()
             flash('Your password has been updated.')
-            return redirect(url_for('user.index'))
+            return redirect(url_for('homepage.index'))
         else:
             flash('Invalid password.')
     return render_template('auth/change_password.html', form=form)
