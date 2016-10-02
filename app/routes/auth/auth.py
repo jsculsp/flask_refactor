@@ -2,7 +2,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
 from app.routes import *
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm
-from .forms import PasswordResetRequestForm, PasswordResetForm
+from .forms import PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 from ...mail.email import send_email
 
 main = Blueprint('auth', __name__)
@@ -133,3 +133,31 @@ def password_reset(token):
             return redirect(url_for('homepage.index'))
     return render_template('auth/reset_password.html', form=form)
 
+
+@main.route('/change-email', methods=['GET', 'POST'])
+@login_required
+def change_email_request():
+    form = ChangeEmailForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.password.data):
+            new_email =form.email.data
+            token = current_user.generate_email_change_token(new_email)
+            send_email(current_user.email, 'Confirm your email address',
+                       'auth/email/change_email',
+                       user=current_user, token=token)
+            flash('An email with instructions to confirm your new email'
+                  'address has been sent to your origin email.')
+            return redirect(url_for('homepage.index'))
+        else:
+            flash('Invalid email or password.')
+    return render_template('auth/change_email.html', form=form)
+
+
+@main.route('/change-email/<token>')
+@login_required
+def change_email(token):
+    if current_user.change_email(token):
+        flash('Your email address has been updated.')
+    else:
+        flash('Invalid request.')
+    return redirect(url_for('homepage.index'))
