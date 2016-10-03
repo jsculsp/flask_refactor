@@ -1,10 +1,16 @@
 from app.mail.email import send_email
 from app.models.user import User
+from app.models.role import Permission
 
 from app.routes import *
 from .forms import NameForm
 
 main = Blueprint('homepage', __name__)
+
+
+@main.app_context_processor
+def inject_permissions():
+    return dict(Permission=Permission)
 
 
 @main.route('/', methods=['GET', 'POST'])

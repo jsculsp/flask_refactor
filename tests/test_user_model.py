@@ -1,10 +1,9 @@
 import time
 import unittest
-
 from app.models import db
-
-from app.app import create_app
-from app.models.user import User
+from app.models.role import Permission, Role
+from app import create_app
+from app.models.user import User, AnonymousUser
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -100,3 +99,13 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u2.change_email(token))
         self.assertTrue(u2.email == 'susan@example.org')
         self.assertTrue(u1.email == 'john@example.com')
+
+    def test_roles_and_permissions(self):
+        Role.insert_roles()
+        u = User(email='john@example.com', password='cat')
+        self.assertTrue(u.can(Permission.WRITE_ARTICLES))
+        self.assertFalse(u.can(Permission.MODERATE_COMMENTS))
+
+    def test_anonymous_user(self):
+        u = AnonymousUser()
+        self.assertFalse(u.can(Permission.FOLLOW))

@@ -2,7 +2,7 @@ import unittest
 
 from flask import current_app
 
-from app.app import create_app
+from app import create_app
 from app.models import db
 
 
