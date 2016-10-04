@@ -1,8 +1,9 @@
 from app.models.user import User
 from app.models.role import Permission, Role
+from app.models.post import Post
 from app.routes import *
 from flask_login import login_required, current_user
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, PostForm
 from ...decorators import admin_required
 
 main = Blueprint('homepage', __name__)
@@ -13,9 +14,17 @@ def inject_permissions():
     return dict(Permission=Permission)
 
 
-@main.route('/')
+@main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    form = PostForm()
+    if current_user.can(Permission.WRITE_ARTICLES) and \
+            form.validate_on_submit():
+        post = Post(body=form.body.data,
+                    author=current_user._get_current_object())
+        post.save()
+        return redirect(url_for('.index'))
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', form=form, posts=posts)
 
 
 @main.route('/user/<username>')
