@@ -31,7 +31,7 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.name = form.name.data
         current_user.location = form.location.data
-        current_user.about_me - form.about_me.data
+        current_user.about_me = form.about_me.data
         current_user.save()
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.username))
