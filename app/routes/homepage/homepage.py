@@ -10,6 +10,12 @@ from ...decorators import admin_required, permission_required
 main = Blueprint('homepage', __name__)
 
 
+def redirect_url(default='index'):
+    return request.args.get('next') or \
+           request.referrer or \
+           url_for(default)
+
+
 @main.app_context_processor
 def inject_permissions():
     return dict(Permission=Permission)
@@ -105,7 +111,7 @@ def post(id):
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / \
-            current_app.config['FLASKY_COMMENTS_PER_PAGE'] + 1
+               current_app.config['FLASKY_COMMENTS_PER_PAGE'] + 1
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
         error_out=False)
@@ -211,3 +217,40 @@ def show_followed():
     resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '1', max_age=30 * 24 * 60 * 60)
     return resp
+
+
+@main.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
+        error_out=False)
+    comments = pagination.items
+    return render_template('moderate.html', comments=comments,
+                           pagination=pagination, page=page)
+
+
+@main.route('/moderate/enable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_enable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = False
+    comment.save()
+    return redirect(request.referrer + '#comments')
+    # return redirect(url_for('.moderate',
+    #                         page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/moderate/disable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_disable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = True
+    comment.save()
+    return redirect(request.referrer + '#comments')
+    # return redirect(url_for('.moderate',
+    #                         page=request.args.get('page', 1, type=int)))

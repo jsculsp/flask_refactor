@@ -108,3 +108,12 @@ div.flask-pagedown-preview h3 {
 textarea.form-control {
     min-height: 140px;
 }
+div.comment-disabled {
+    color: orange;
+    height: 32px;
+    width: 349px;
+    display: block;
+    background: #f9ecce;
+    border-radius: 7px;
+    padding: 4px 17px;
+}
