@@ -1,6 +1,7 @@
 from . import ModelMixin
 from . import db
 from .role import Role, Permission
+from .post import Post
 from .. import login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -182,6 +183,10 @@ class User(db.Model, ModelMixin, UserMixin):
         return self.followers.filter_by(
             follower_id=user.id).first() is not None
 
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id) \
+            .filter(Follow.follower_id == self.id)
 
     def __repr__(self):
         return '<User %r>' % self.username

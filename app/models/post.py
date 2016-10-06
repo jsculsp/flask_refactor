@@ -1,7 +1,6 @@
 from . import ModelMixin
 from . import db
 from datetime import datetime
-from .user import User
 from markdown import markdown
 import bleach
 
@@ -17,6 +16,7 @@ class Post(db.Model, ModelMixin):
     @staticmethod
     def generate_fake(count=100):
         from random import seed, randint
+        from .user import User
         import forgery_py
 
         seed()
