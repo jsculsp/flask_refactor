@@ -29,7 +29,10 @@ def create_app(config_name='default'):
     login_manager.init_app(app)
     pagedown.init_app(app)
 
-    from .routes.homepage.homepage import main as routes_user
+    from .routes import global_main as routes_global
+    app.register_blueprint(routes_global)
+
+    from .routes.main.main import main as routes_user
     app.register_blueprint(routes_user)
 
     from .routes.auth.auth import main as routes_auth

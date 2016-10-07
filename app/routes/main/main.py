@@ -2,12 +2,12 @@ from app.models.user import User
 from app.models.role import Permission, Role
 from app.models.post import Post
 from app.models.comment import Comment
-from app.routes import *
+from .. import *
 from flask_login import login_required, current_user
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
 from ...decorators import admin_required, permission_required
 
-main = Blueprint('homepage', __name__)
+main = Blueprint('main', __name__)
 
 
 def redirect_url(default='index'):
