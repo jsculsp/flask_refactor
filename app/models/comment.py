@@ -3,6 +3,7 @@ from . import db
 from datetime import datetime
 from markdown import markdown
 import bleach
+from flask import render_template
 
 
 class Comment(db.Model, ModelMixin):
@@ -23,5 +24,12 @@ class Comment(db.Model, ModelMixin):
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
 
+    def json(self):
+        t = render_template('api/comment.html', comment=self)
+        return t
+
+    def error_message(self):
+        if len(self.body) <= 0:
+            return '评论不能为空！'
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
