@@ -15,9 +15,13 @@ var bindEventCommentAdd = function() {
                 var t = r.data
                 $('.comments').prepend(t)
                 $('#body').val('')
-                alert('添加成功！')
+                alertify.alert("评论成功！", function(){
+                    alertify.message('评论成功！')
+                })
             } else {
-                alert(r.message)
+                alertify.alert(r.message, function(){
+                    alertify.message(r.message)
+                })
             }
         }
         api.commentAdd(postId, form, response)
