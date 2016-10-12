@@ -19,9 +19,7 @@ var bindEventCommentAdd = function() {
                     alertify.message('评论成功！')
                 })
             } else {
-                alertify.alert(r.message, function(){
-                    alertify.message(r.message)
-                })
+                alertify.message(r.message)
             }
         }
         api.commentAdd(postId, form, response)
